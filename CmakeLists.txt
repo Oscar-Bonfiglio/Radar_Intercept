@@ -1,0 +1,55 @@
+cmake_minimum_required(VERSION 3.16)
+project(MissileSim LANGUAGES CXX)
+ 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+ 
+# ── Find SDL2 ────────────────────────────────────────────────────
+find_package(SDL2 REQUIRED)
+ 
+# ── Source files ─────────────────────────────────────────────────
+set(SOURCES
+    main.cpp
+ 
+    engine/Game.cpp
+    engine/Renderer.cpp
+ 
+    physics/PhysicsBody.cpp
+ 
+    entities/Missile.cpp
+    entities/Aircraft.cpp
+ 
+    guidance/GuidanceSystem.cpp
+ 
+    radar/RadarSystem.cpp
+ 
+    ui/DebugOverlay.cpp
+)
+ 
+# ── Executable ───────────────────────────────────────────────────
+add_executable(MissileSim ${SOURCES})
+ 
+# ── Include paths ────────────────────────────────────────────────
+target_include_directories(MissileSim PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${SDL2_INCLUDE_DIRS}
+)
+ 
+# ── Link SDL2 ────────────────────────────────────────────────────
+target_link_libraries(MissileSim PRIVATE ${SDL2_LIBRARIES})
+ 
+# ── Compiler warnings ────────────────────────────────────────────
+if(MSVC)
+    target_compile_options(MissileSim PRIVATE /W4)
+else()
+    target_compile_options(MissileSim PRIVATE -Wall -Wextra -Wpedantic)
+endif()
+ 
+# ── Build type default ───────────────────────────────────────────
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Debug)
+endif()
+ 
+message(STATUS "Build type : ${CMAKE_BUILD_TYPE}")
+message(STATUS "SDL2 found : ${SDL2_INCLUDE_DIRS}")
+ 
